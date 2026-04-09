@@ -1,0 +1,42 @@
+body{
+  background-color:#f5f7fb;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h2{
+  text-align:center;
+  margin-bottom:20px;
+  font-weight:600;
+}
+
+.container{
+  max-width:450px;
+  background:white;
+  padding:30px;
+  border-radius:10px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+input{
+  height:45px;
+}
+
+button{
+  width:100%;
+}
+
+hr{
+  margin:25px 0;
+}
+
+.dashboard-box{
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.section-title{
+  font-weight:600;
+  margin-bottom:10px;
+}

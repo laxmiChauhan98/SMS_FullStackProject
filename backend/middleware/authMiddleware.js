@@ -1,27 +1,30 @@
 const jwt = require("jsonwebtoken");
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = (req,res,next)=>{
 
-  const authHeader = req.headers.authorization;
+const authHeader = req.headers.authorization;
 
-  if (!authHeader) {
-    return res.status(401).json({ message: "Token required" });
-  }
+if(!authHeader){
+return res.status(401).json({message:"Token required"})
+}
 
-  try {
+try{
 
-    // Remove "Bearer "
-    const token = authHeader.split(" ")[1];
+const token = authHeader.split(" ")[1];
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+const decoded = jwt.verify(token,process.env.JWT_SECRET);
 
-    req.student = decoded;
+req.student = decoded;
 
-    next();
+next();
 
-  } catch (error) {
-    res.status(401).json({ message: "Invalid Token" });
-  }
-};
+}
+catch(error){
+
+return res.status(401).json({message:"Invalid token"})
+
+}
+
+}
 
 module.exports = authMiddleware;
