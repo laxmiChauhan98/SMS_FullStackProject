@@ -1,47 +1,63 @@
-import {useState} from "react";
+import { useState } from "react";
 import API from "../services/api";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function Login(){
+function Login() {
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const [email,setEmail] = useState("");
-const [password,setPassword] = useState("");
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
 
-const handleLogin = async ()=>{
+  const handleLogin = async () => {
 
-const res = await API.post("/login",{email,password});
+    try{
 
-localStorage.setItem("token",res.data.token);
-localStorage.setItem("student",JSON.stringify(res.data.student));
+      const res = await API.post("/login",{email,password});
 
-navigate("/dashboard");
+      if(res.data.token && res.data.student){
 
-}
+        localStorage.setItem("token",res.data.token);
+        localStorage.setItem("student",JSON.stringify(res.data.student));
 
-return(
+        navigate("/dashboard");
 
-<div className="container">
+      }else{
+        alert("Login failed");
+      }
 
-<h2>Login</h2>
+    }
+    catch(error){
+      console.log(error);
+      alert("Server error during login");
+    }
 
-<input
-placeholder="Email"
-onChange={(e)=>setEmail(e.target.value)}
-/>
+  };
 
-<input
-type="password"
-placeholder="Password"
-onChange={(e)=>setPassword(e.target.value)}
-/>
+  return(
 
-<button onClick={handleLogin}>Login</button>
+  <div className="container">
 
-</div>
+  <h2>Login</h2>
 
-)
+  <input
+  placeholder="Email"
+  value={email}
+  onChange={(e)=>setEmail(e.target.value)}
+  />
+
+  <input
+  type="password"
+  placeholder="Password"
+  value={password}
+  onChange={(e)=>setPassword(e.target.value)}
+  />
+
+  <button onClick={handleLogin}>Login</button>
+
+  </div>
+
+  );
 
 }
 
