@@ -1,97 +1,107 @@
-import { useState } from "react";
+import {useState,useEffect} from "react";
 import API from "../services/api";
+import {useNavigate} from "react-router-dom";
 
 function Dashboard(){
 
-const [course,setCourse]=useState("")
-const [oldPassword,setOldPassword]=useState("")
-const [newPassword,setNewPassword]=useState("")
+const navigate = useNavigate();
+
+const [student,setStudent] = useState(null);
+const [course,setCourse] = useState("");
+const [oldPassword,setOldPassword] = useState("");
+const [newPassword,setNewPassword] = useState("");
+
+useEffect(()=>{
+
+const data = localStorage.getItem("student");
+
+if(!data){
+navigate("/login");
+return;
+}
+
+setStudent(JSON.parse(data));
+
+},[]);
+
 
 const updateCourse = async ()=>{
 
-try{
+const res = await API.put("/update-course",{course});
 
-await API.put("/update-course",{course})
+setStudent(res.data);
 
-alert("Course Updated")
+localStorage.setItem("student",JSON.stringify(res.data));
 
-}
-catch{
-alert("Course update failed")
-}
+alert("Course updated");
 
 }
+
 
 const updatePassword = async ()=>{
 
-try{
+await API.put("/update-password",{oldPassword,newPassword});
 
-await API.put("/update-password",{
-oldPassword,
-newPassword
-})
-
-alert("Password Updated")
+alert("Password updated");
 
 }
-catch{
-alert("Password update failed")
-}
 
-}
 
 const logout = ()=>{
-localStorage.removeItem("token")
-window.location="/login"
+
+localStorage.clear();
+
+navigate("/login");
+
+}
+
+
+if(!student){
+return <h2>Loading...</h2>
 }
 
 return(
 
-<div className="container mt-5">
+<div className="dashboard-box">
 
 <h2>Student Dashboard</h2>
 
+<p><b>Name:</b> {student.name}</p>
+<p><b>Email:</b> {student.email}</p>
+<p><b>Course:</b> {student.course}</p>
+
 <hr/>
 
-<h4>Change Course</h4>
+<h4>Update Course</h4>
 
 <input
-className="form-control mb-2"
 placeholder="New Course"
 onChange={(e)=>setCourse(e.target.value)}
 />
 
-<button className="btn btn-warning mb-3" onClick={updateCourse}>
-Update Course
-</button>
+<button onClick={updateCourse}>Update Course</button>
 
 <hr/>
 
 <h4>Update Password</h4>
 
 <input
-className="form-control mb-2"
 type="password"
 placeholder="Old Password"
 onChange={(e)=>setOldPassword(e.target.value)}
 />
 
 <input
-className="form-control mb-2"
 type="password"
 placeholder="New Password"
 onChange={(e)=>setNewPassword(e.target.value)}
 />
 
-<button className="btn btn-primary mb-3" onClick={updatePassword}>
-Update Password
-</button>
+<button onClick={updatePassword}>Update Password</button>
 
 <hr/>
 
-<button className="btn btn-danger" onClick={logout}>
-Logout
-</button>
+<button onClick={logout}>Logout</button>
 
 </div>
 
@@ -99,4 +109,4 @@ Logout
 
 }
 
-export default Dashboard
+export default Dashboard;

@@ -1,61 +1,43 @@
-import { useState } from "react";
+import {useState} from "react";
 import API from "../services/api";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 function Login(){
 
 const navigate = useNavigate();
 
-const [email,setEmail]=useState("")
-const [password,setPassword]=useState("")
+const [email,setEmail] = useState("");
+const [password,setPassword] = useState("");
 
-const loginStudent = async ()=>{
+const handleLogin = async ()=>{
 
-try{
+const res = await API.post("/login",{email,password});
 
-const res = await API.post("/login",{
-email,
-password
-})
-localStorage.setItem("token",res.data.token)
+localStorage.setItem("token",res.data.token);
+localStorage.setItem("student",JSON.stringify(res.data.student));
 
-navigate("/dashboard")
-
-}
-catch{
-
-alert("Invalid login credentials")
-
-}
+navigate("/dashboard");
 
 }
 
 return(
 
-<div className="container mt-5">
+<div className="container">
 
-<h2>Student Login</h2>
+<h2>Login</h2>
 
 <input
-className="form-control mb-2"
 placeholder="Email"
 onChange={(e)=>setEmail(e.target.value)}
 />
 
 <input
-className="form-control mb-2"
 type="password"
 placeholder="Password"
 onChange={(e)=>setPassword(e.target.value)}
 />
 
-<button className="btn btn-success" onClick={loginStudent}>
-Login
-</button>
-
-<p className="mt-3">
-New Student? <a href="/register">Register</a>
-</p>
+<button onClick={handleLogin}>Login</button>
 
 </div>
 
@@ -63,4 +45,4 @@ New Student? <a href="/register">Register</a>
 
 }
 
-export default Login
+export default Login;
